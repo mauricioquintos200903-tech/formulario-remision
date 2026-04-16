@@ -325,9 +325,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   // ── CONFIGURACIÓN EMAILJS ──────────────────────────────────────
-  emailjs.init('SEDuc6cmbSV6A4p-q');
-  const EMAILJS_SERVICE = 'service_jdnkf7a';
-  const EMAILJS_TEMPLATE = 'template_pn3ij54';
+  // Power Automate
+  const FLOW_URL = 'https://default5be5e0429c1f4adbb5ab251d950378.eb.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6cc31f6eb72747ffbc6bca00b0e679b1/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=1TyJyL2byy5hcuZzYPW0cmvuO2Oq-EFKT_5Dgi6ksT0';
+  
   const REY = { dni:'10438228', nombre:'Wilson Oxza', placa:'CFO811', licencia:'Q10438228' };
   const UNIDADES = ['Unidades','Kilogramos','Gramos','Toneladas','Metros','Metros cuadrados','Litros','Cajas','Bolsas','Pallets','Sacos'];
 
@@ -411,19 +411,56 @@
       licencia: document.getElementById('licencia').value.trim()
     };
 
-    // Construir HTML de ítems para el correo
-    let items_html = '';
+    // Construir filas de ítems
+    let itemsRows = '';
     items.forEach((item, idx) => {
       const bg = idx % 2 === 0 ? '#f9f9f9' : '#ffffff';
-      items_html += `<tr style="background:${bg};">
-        <td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.descripcion}</td>
-        <td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.cantidad}</td>
-        <td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.unidad}</td>
-      </tr>`;
+      itemsRows += `<tr style="background:${bg};"><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.descripcion}</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.cantidad}</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.unidad}</td></tr>`;
     });
 
+    const sol = document.getElementById('solicitante').value.trim();
+    const mensaje_completo = `<div style="font-family:Arial,sans-serif;max-width:650px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+<div style="background:#185FA5;padding:24px 28px;">
+<p style="margin:0;color:#a8d0f0;font-size:12px;text-transform:uppercase;">Logística · ARX SA</p>
+<h1 style="margin:6px 0 0 0;color:#fff;font-size:20px;">Nueva Solicitud de Guía de Remisión</h1>
+</div>
+<div style="padding:24px 28px;">
+<p style="font-size:12px;font-weight:700;color:#185FA5;text-transform:uppercase;">Solicitante</p>
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:20px;width:100%;">
+<tr style="background:#EBF3FB;"><td style="padding:10px 14px;font-weight:600;font-size:13px;width:45%;border:1px solid #d0e4f5;">Nombre</td><td style="padding:10px 14px;font-size:13px;border:1px solid #d0e4f5;">${sol}</td></tr>
+<tr><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">Área</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${document.getElementById('area').value.trim()}</td></tr>
+</table>
+<p style="font-size:12px;font-weight:700;color:#185FA5;text-transform:uppercase;">Datos del Destinatario</p>
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:20px;width:100%;">
+<tr style="background:#EBF3FB;"><td style="padding:10px 14px;font-weight:600;font-size:13px;width:45%;border:1px solid #d0e4f5;">Razón Social</td><td style="padding:10px 14px;font-size:13px;border:1px solid #d0e4f5;">${document.getElementById('razonSocial').value.trim()}</td></tr>
+<tr><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">RUC</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${document.getElementById('ruc').value.trim()}</td></tr>
+<tr style="background:#f9f9f9;"><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">Razón / Motivo</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${document.getElementById('motivo').value.trim()}</td></tr>
+<tr><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">Peso bruto total (kg)</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${document.getElementById('peso').value.trim()}</td></tr>
+<tr style="background:#f9f9f9;"><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">Número de bultos</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${document.getElementById('bultos').value.trim()}</td></tr>
+<tr><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">Fecha de traslado</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${document.getElementById('fechaTraslado').value}</td></tr>
+</table>
+<p style="font-size:12px;font-weight:700;color:#185FA5;text-transform:uppercase;">Transporte</p>
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:20px;width:100%;">
+<tr style="background:#EBF3FB;"><td style="padding:10px 14px;font-weight:600;font-size:13px;width:45%;border:1px solid #d0e4f5;">Tipo de transporte</td><td style="padding:10px 14px;font-size:13px;border:1px solid #d0e4f5;">${transporte === 'rey' ? 'Rey' : 'Privado'}</td></tr>
+<tr><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">DNI del chofer</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${ch.dni}</td></tr>
+<tr style="background:#f9f9f9;"><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">Nombre del chofer</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${ch.nombre}</td></tr>
+<tr><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">Placa</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${ch.placa}</td></tr>
+<tr style="background:#f9f9f9;"><td style="padding:10px 14px;font-weight:600;font-size:13px;border:1px solid #e8e8e8;">Licencia</td><td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${ch.licencia}</td></tr>
+</table>
+<p style="font-size:12px;font-weight:700;color:#185FA5;text-transform:uppercase;">Ítems a Transportar</p>
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:20px;width:100%;">
+<tr style="background:#185FA5;"><td style="padding:10px 14px;font-weight:600;font-size:13px;color:#fff;border:1px solid #0f4a8a;width:50%;">Descripción</td><td style="padding:10px 14px;font-weight:600;font-size:13px;color:#fff;border:1px solid #0f4a8a;width:25%;">Cantidad</td><td style="padding:10px 14px;font-weight:600;font-size:13px;color:#fff;border:1px solid #0f4a8a;width:25%;">Unidad</td></tr>
+${itemsRows}
+</table>
+<p style="font-size:12px;font-weight:700;color:#185FA5;text-transform:uppercase;">Observaciones</p>
+<div style="background:#f9f9f9;border:1px solid #e8e8e8;border-radius:8px;padding:12px 14px;font-size:13px;color:#555;">${document.getElementById('observaciones').value.trim() || '-'}</div>
+</div>
+<div style="background:#f0ede8;padding:14px 28px;text-align:center;"><p style="margin:0;font-size:11px;color:#999;">Solicitud generada automáticamente · ARX SA</p></div>
+</div>`;
+
     const params = {
-      solicitante: document.getElementById('solicitante').value.trim(),
+      mensaje_completo,
+      solicitante: sol,
       area: document.getElementById('area').value.trim(),
       razonSocial: document.getElementById('razonSocial').value.trim(),
       ruc: document.getElementById('ruc').value.trim(),
@@ -436,7 +473,6 @@
       nombreChofer: ch.nombre,
       placa: ch.placa,
       licencia: ch.licencia,
-      items_html: items_html,
       observaciones: document.getElementById('observaciones').value.trim() || '-',
       name: document.getElementById('solicitante').value.trim(),
       email: 'practi_ope01@rey.pe'
@@ -446,7 +482,7 @@
     document.getElementById('btnEnviar').disabled = true;
 
     try {
-      await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, params);
+      const res = await fetch(FLOW_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) }); if(!res.ok && res.status !== 202) throw new Error(res.status);
       document.getElementById('overlay').classList.remove('on');
       document.getElementById('form-wrapper').style.display = 'none';
       document.getElementById('success-screen').style.display = 'block';
