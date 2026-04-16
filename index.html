@@ -403,6 +403,13 @@
         unidad: document.getElementById(`uni-${i}`).value
       });
     }
+    // Build individual item params for SharePoint
+    const itemParams = {};
+    for(let i=1;i<=10;i++){
+      itemParams[`Item_${i}`] = i <= items.length ? items[i-1].descripcion : '';
+      itemParams[`CANTIDAD_${i}`] = i <= items.length ? items[i-1].cantidad : '';
+      itemParams[`UNIDAD_${i}`] = i <= items.length ? items[i-1].unidad : '';
+    }
 
     const ch = transporte==='rey' ? REY : {
       dni: document.getElementById('dniChofer').value.trim(),
@@ -460,20 +467,22 @@ ${itemsRows}
 
     const params = {
       mensaje_completo,
-      solicitante: sol,
-      area: document.getElementById('area').value.trim(),
-      razonSocial: document.getElementById('razonSocial').value.trim(),
-      ruc: document.getElementById('ruc').value.trim(),
-      motivo: document.getElementById('motivo').value.trim(),
-      peso: document.getElementById('peso').value.trim(),
-      bultos: document.getElementById('bultos').value.trim(),
-      fechaTraslado: document.getElementById('fechaTraslado').value,
-      tipoTransporte: transporte === 'rey' ? 'Rey' : 'Privado',
-      dniChofer: ch.dni,
-      nombreChofer: ch.nombre,
-      placa: ch.placa,
-      licencia: ch.licencia,
-      observaciones: document.getElementById('observaciones').value.trim() || '-',
+      Solicitante: sol,
+      ...itemParams,
+      Area: document.getElementById('area').value.trim(),
+      RazonSocial: document.getElementById('razonSocial').value.trim(),
+      RUC: document.getElementById('ruc').value.trim(),
+      Motivo: document.getElementById('motivo').value.trim(),
+      PesoBruto: document.getElementById('peso').value.trim(),
+      NumeroBultos: document.getElementById('bultos').value.trim(),
+      FechaTraslado: document.getElementById('fechaTraslado').value,
+      TipoTransporte: transporte === 'rey' ? 'Rey' : 'Privado',
+      DniChofer: ch.dni,
+      NombreChofer: ch.nombre,
+      Placa: ch.placa,
+      Licencia: ch.licencia,
+      Items: JSON.stringify(items),
+      Observaciones: document.getElementById('observaciones').value.trim() || '-',
       name: document.getElementById('solicitante').value.trim(),
       email: 'practi_ope01@rey.pe'
     };
