@@ -322,10 +322,12 @@
   <button class="btn-new" onclick="resetForm()">Nueva solicitud</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  // ── CONFIGURACIÓN ──────────────────────────────────────────────
-  const SP_SITE = 'https://arxsa331.sharepoint.com/sites/SOLICITUDDEGUIADEREMISIN';
-  const SP_LIST = 'SOLICITUD DE GUIA DE REMISIÓN';
+  // ── CONFIGURACIÓN EMAILJS ──────────────────────────────────────
+  emailjs.init('SEDuc6cmbSV6A4p-q');
+  const EMAILJS_SERVICE = 'service_jdnkf7a';
+  const EMAILJS_TEMPLATE = 'ixjb83z';
   const REY = { dni:'10438228', nombre:'Wilson Oxza', placa:'CFO811', licencia:'Q10438228' };
   const UNIDADES = ['Unidades','Kilogramos','Gramos','Toneladas','Metros','Metros cuadrados','Litros','Cajas','Bolsas','Pallets','Sacos'];
 
@@ -409,63 +411,52 @@
       licencia: document.getElementById('licencia').value.trim()
     };
 
-    const body = {
-      '__metadata': { 'type': 'SP.Data.SOLICITUD_x0020_DE_x0020_GUIA_x0020_DE_x0020_REMISI_x00d3_NListItem' },
-      'Raz_x00f3_nsocialdeldestinatario': document.getElementById('razonSocial').value.trim(),
-      'RUC': parseFloat(document.getElementById('ruc').value),
-      'Raz_x00f3_n_x002f_MotivodelaguNx0': document.getElementById('motivo').value.trim(),
-      'Pesobrutototal_x0028_kg_x0029_': parseFloat(document.getElementById('peso').value),
-      'N_x00fa_merodebultos': parseFloat(document.getElementById('bultos').value),
-      'Fechadetraslado': document.getElementById('fechaTraslado').value + 'T00:00:00Z',
-      'TipoTransporte': transporte==='rey' ? 'Rey' : 'Privado',
-      'DniChofer': ch.dni,
-      'NombreChofer': ch.nombre,
-      'Placa': ch.placa,
-      'Licencia': ch.licencia,
-      'Items': JSON.stringify(items),
-      'Observaciones': document.getElementById('observaciones').value.trim(),
-      'SOLICITANTE': document.getElementById('solicitante').value.trim(),
-      '_x00c1_REA': document.getElementById('area').value.trim()
+    // Construir HTML de ítems para el correo
+    let items_html = '';
+    items.forEach((item, idx) => {
+      const bg = idx % 2 === 0 ? '#f9f9f9' : '#ffffff';
+      items_html += `<tr style="background:${bg};">
+        <td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.descripcion}</td>
+        <td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.cantidad}</td>
+        <td style="padding:10px 14px;font-size:13px;border:1px solid #e8e8e8;">${item.unidad}</td>
+      </tr>`;
+    });
+
+    const params = {
+      solicitante: document.getElementById('solicitante').value.trim(),
+      area: document.getElementById('area').value.trim(),
+      razonSocial: document.getElementById('razonSocial').value.trim(),
+      ruc: document.getElementById('ruc').value.trim(),
+      motivo: document.getElementById('motivo').value.trim(),
+      peso: document.getElementById('peso').value.trim(),
+      bultos: document.getElementById('bultos').value.trim(),
+      fechaTraslado: document.getElementById('fechaTraslado').value,
+      tipoTransporte: transporte === 'rey' ? 'Rey' : 'Privado',
+      dniChofer: ch.dni,
+      nombreChofer: ch.nombre,
+      placa: ch.placa,
+      licencia: ch.licencia,
+      items_html: items_html,
+      observaciones: document.getElementById('observaciones').value.trim() || '-',
+      name: document.getElementById('solicitante').value.trim(),
+      email: 'practi_ope01@rey.pe'
     };
 
     document.getElementById('overlay').classList.add('on');
     document.getElementById('btnEnviar').disabled = true;
 
     try {
-      const res = await fetch(`${SP_SITE}/_api/web/lists/getbytitle('${encodeURIComponent(SP_LIST)}')/items`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json;odata=verbose',
-          'Content-Type': 'application/json;odata=verbose',
-          'X-RequestDigest': await getDigest()
-        },
-        credentials: 'include',
-        body: JSON.stringify(body)
-      });
-
-      if(!res.ok) throw new Error(await res.text());
-
+      await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, params);
       document.getElementById('overlay').classList.remove('on');
       document.getElementById('form-wrapper').style.display = 'none';
       document.getElementById('success-screen').style.display = 'block';
       window.scrollTo({top:0,behavior:'smooth'});
-
     } catch(err) {
       document.getElementById('overlay').classList.remove('on');
       document.getElementById('btnEnviar').disabled = false;
-      alert('Error al guardar: ' + err.message);
+      alert('Error al enviar: ' + JSON.stringify(err));
     }
   });
-
-  async function getDigest() {
-    const r = await fetch(`${SP_SITE}/_api/contextinfo`, {
-      method: 'POST',
-      headers: { 'Accept': 'application/json;odata=verbose' },
-      credentials: 'include'
-    });
-    const d = await r.json();
-    return d.d.GetContextWebInformation.FormDigestValue;
-  }
 
   function resetForm(){
     document.getElementById('mainForm').reset();
