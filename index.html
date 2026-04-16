@@ -1,352 +1,484 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solicitud de Guía de Remisión</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', system-ui, sans-serif; background: #F0EEE8; color: #1a1a1a; min-height: 100vh; padding: 2rem 1rem; }
-    .form-wrap { max-width: 700px; margin: 0 auto; }
-    .form-header { margin-bottom: 1.75rem; }
-    .form-header .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #185FA5; margin-bottom: 6px; }
-    .form-header h1 { font-size: 22px; font-weight: 600; color: #111; }
-    .form-header p { font-size: 13px; color: #777; margin-top: 4px; }
-    .card { background: #fff; border: 1px solid #e4e2dc; border-radius: 14px; padding: 1.5rem; margin-bottom: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-    .section-title { font-size: 13px; font-weight: 600; color: #444; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 10px; }
-    .badge { background: #EBF3FB; color: #185FA5; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.03em; text-transform: none; }
-    .field { margin-bottom: 1rem; }
-    .field:last-child { margin-bottom: 0; }
-    label { display: block; font-size: 12px; font-weight: 500; color: #666; margin-bottom: 5px; }
-    input[type=text], input[type=number], input[type=date], textarea, select { width: 100%; padding: 9px 13px; font-size: 14px; border-radius: 8px; border: 1px solid #ddd; background: #fafafa; color: #111; font-family: 'Inter', system-ui, sans-serif; transition: border-color 0.15s, background 0.15s; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: #185FA5; background: #fff; box-shadow: 0 0 0 3px rgba(24,95,165,0.08); }
-    textarea { resize: vertical; min-height: 80px; }
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .transport-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
-    .transport-opt { border: 1.5px solid #e0ddd8; border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.15s; display: flex; align-items: flex-start; gap: 10px; }
-    .transport-opt:hover { border-color: #185FA5; background: #f5f9fe; }
-    .transport-opt.selected { border-color: #185FA5; background: #EBF3FB; }
-    .transport-opt input[type=radio] { margin-top: 2px; accent-color: #185FA5; }
-    .transport-opt-label { font-size: 13px; font-weight: 500; color: #222; }
-    .transport-opt-sub { font-size: 11px; color: #999; margin-top: 2px; }
-    .rey-info { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 0; }
-    .rey-chip { background: #EBF3FB; border: 1px solid #b8d4ee; border-radius: 8px; padding: 6px 12px; font-size: 12px; color: #185FA5; font-weight: 500; }
-    .rey-chip span { color: #0C447C; font-weight: 600; }
-    #driver-fields { display: none; margin-top: 1rem; }
-    .divider { border: none; border-top: 1px solid #f0ede8; margin: 1.25rem 0; }
-    .qty-row { display: flex; align-items: center; gap: 12px; }
-    .qty-row input { width: 100px; flex-shrink: 0; }
-    .qty-row span { font-size: 13px; color: #999; }
-    .hint { font-size: 12px; color: #aaa; margin-top: 5px; }
-    .item-card { background: #f8f7f4; border: 1px solid #e8e5df; border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 10px; }
-    .item-label { font-size: 12px; font-weight: 600; color: #185FA5; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-    .item-num { width: 22px; height: 22px; background: #185FA5; color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
-    .btn-primary { background: #185FA5; color: #fff; border: none; border-radius: 10px; padding: 13px 24px; font-size: 15px; font-weight: 500; font-family: 'Inter', system-ui, sans-serif; cursor: pointer; width: 100%; margin-top: 0.5rem; transition: background 0.15s, transform 0.1s; }
-    .btn-primary:hover { background: #0C447C; }
-    .btn-primary:active { transform: scale(0.99); }
-    .btn-primary:disabled { background: #9bb8d8; cursor: not-allowed; }
-    .success-msg { display: none; background: #EAF5EE; border: 1px solid #9FE1CB; border-radius: 10px; padding: 1rem 1.25rem; color: #0F6E56; font-size: 14px; font-weight: 500; margin-top: 1rem; text-align: center; }
-    .error-msg { display: none; background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px; padding: 1rem 1.25rem; color: #B91C1C; font-size: 14px; font-weight: 500; margin-top: 1rem; text-align: center; }
-    .obs-example { font-size: 11px; color: #aaa; margin-top: 4px; font-style: italic; }
-    @media (max-width: 520px) { .row2, .transport-options { grid-template-columns: 1fr; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitud de Guía de Remisión · ARX SA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #185FA5;
+    --blue-light: #EBF3FB;
+    --blue-dark: #0f4a8a;
+    --accent: #2563eb;
+    --bg: #f0f4f8;
+    --white: #ffffff;
+    --border: #dde3ed;
+    --text: #1a2236;
+    --muted: #6b7a99;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(24,95,165,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 16px 80px;
+  }
+  .page-header {
+    max-width: 740px;
+    margin: 0 auto 32px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .logo-box {
+    width: 48px; height: 48px;
+    background: var(--blue);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-box svg { width: 26px; height: 26px; fill: white; }
+  .page-header h1 { font-size: 24px; font-weight: 700; color: var(--text); }
+  .page-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 28px 32px;
+    max-width: 740px;
+    margin: 0 auto 18px;
+  }
+  .section-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 22px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--blue-light);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 14px;
+    background: var(--blue);
+    border-radius: 2px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .span-2 { grid-column: span 2; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  label { font-size: 11.5px; font-weight: 600; color: var(--muted); letter-spacing: 0.03em; }
+  input, select, textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--text);
+    background: #f8fafc;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 13px;
+    transition: all 0.2s;
+    outline: none; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.09);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .transport-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+  .t-option {
+    border: 2px solid var(--border);
+    border-radius: 10px; padding: 16px 18px;
+    cursor: pointer; transition: all 0.18s;
+    position: relative; background: #f8fafc;
+  }
+  .t-option:hover { border-color: var(--accent); background: #f0f6ff; }
+  .t-option.active { border-color: var(--accent); background: #eff6ff; }
+  .t-option.active::after {
+    content: '✓'; position: absolute; top: 10px; right: 12px;
+    color: var(--accent); font-weight: 700; font-size: 13px;
+  }
+  .t-option h4 { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .t-option p { font-size: 12px; color: var(--muted); }
+  .precargado {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    background: var(--blue-light); border-radius: 8px; padding: 12px 14px;
+  }
+  .badge {
+    font-size: 11.5px; font-weight: 500; color: var(--blue-dark);
+    background: white; border: 1px solid #c3d9f0;
+    border-radius: 20px; padding: 4px 10px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .items-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .items-header label { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; }
+  .items-header input { width: 70px; text-align: center; font-weight: 700; font-size: 15px; }
+  .item-block {
+    border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 12px; background: #f8fafc;
+  }
+  .item-block:focus-within { border-color: #93c5fd; background: white; }
+  .item-num-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .item-num {
+    width: 24px; height: 24px; background: var(--blue); color: white;
+    border-radius: 50%; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .item-num-row span { font-size: 13px; font-weight: 600; }
+
+  .btn-submit {
+    display: block; width: 100%; max-width: 740px; margin: 0 auto;
+    padding: 16px; background: var(--blue); color: white;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    border: none; border-radius: var(--radius); cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.01em;
+  }
+  .btn-submit:hover { background: var(--blue-dark); box-shadow: 0 6px 24px rgba(24,95,165,0.28); transform: translateY(-1px); }
+  .btn-submit:active { transform: none; }
+  .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  #success-screen {
+    display: none; max-width: 740px; margin: 0 auto;
+    text-align: center; padding: 70px 32px;
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .success-icon {
+    width: 68px; height: 68px; background: #dcfce7; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; font-size: 30px;
+  }
+  #success-screen h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  #success-screen p { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+  .btn-new {
+    display: inline-block; padding: 12px 28px;
+    background: var(--blue-light); color: var(--blue);
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+    border: none; border-radius: 8px; cursor: pointer;
+  }
+
+  .field.error input, .field.error select, .field.error textarea { border-color: #ef4444; }
+  .err-msg { font-size: 11px; color: #ef4444; display: none; }
+  .field.error .err-msg { display: block; }
+
+  #overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(255,255,255,0.85); z-index: 999;
+    align-items: center; justify-content: center; flex-direction: column; gap: 14px;
+  }
+  #overlay.on { display: flex; }
+  .spinner {
+    width: 42px; height: 42px; border: 3px solid var(--blue-light);
+    border-top-color: var(--blue); border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #overlay p { font-size: 14px; color: var(--blue); font-weight: 500; }
+
+  @media(max-width:600px) {
+    .grid-2, .transport-grid { grid-template-columns: 1fr; }
+    .span-2 { grid-column: span 1; }
+    .card { padding: 20px 18px; }
+  }
+</style>
 </head>
 <body>
 
-<div class="form-wrap">
+<div id="overlay" class=""><div class="spinner"></div><p>Guardando solicitud...</p></div>
 
-  <div class="form-header">
-    <div class="eyebrow">Logística</div>
-    <h1>Solicitud de Guía de Remisión</h1>
-    <p>Complete todos los datos para generar la solicitud de traslado</p>
+<div id="form-wrapper">
+  <div class="page-header">
+    <div class="logo-box">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
+    </div>
+    <div>
+      <h1>Solicitud de Guía de Remisión</h1>
+      <p>Logística · ARX SA — Complete todos los campos para generar la solicitud</p>
+    </div>
   </div>
 
-  <!-- DESTINATARIO -->
-  <div class="card">
-    <div class="section-title">Datos del destinatario</div>
-    <div class="field">
-      <label>Razón social del destinatario</label>
-      <input type="text" id="razon-social" placeholder="Nombre o razón social completa" />
+  <form id="mainForm" novalidate>
+
+    <!-- SOLICITANTE -->
+    <div class="card">
+      <div class="section-title">Datos del Solicitante</div>
+      <div class="grid-2">
+        <div class="field" id="f-sol">
+          <label>Nombre completo *</label>
+          <input type="text" id="solicitante" placeholder="Nombre y apellido">
+          <span class="err-msg">Campo requerido</span>
+        </div>
+        <div class="field" id="f-area">
+          <label>Área / Departamento *</label>
+          <input type="text" id="area" placeholder="Ej: Logística, Comercial...">
+          <span class="err-msg">Campo requerido</span>
+        </div>
+      </div>
     </div>
-    <div class="row2">
+
+    <!-- DESTINATARIO -->
+    <div class="card">
+      <div class="section-title">Datos del Destinatario</div>
+      <div class="grid-2">
+        <div class="field span-2" id="f-razon">
+          <label>Razón social del destinatario *</label>
+          <input type="text" id="razonSocial" placeholder="Razón social">
+          <span class="err-msg">Campo requerido</span>
+        </div>
+        <div class="field" id="f-ruc">
+          <label>RUC *</label>
+          <input type="text" id="ruc" placeholder="20xxxxxxxxx" maxlength="11">
+          <span class="err-msg">Campo requerido</span>
+        </div>
+        <div class="field" id="f-motivo">
+          <label>Razón / Motivo de la guía *</label>
+          <input type="text" id="motivo" placeholder="Motivo del traslado">
+          <span class="err-msg">Campo requerido</span>
+        </div>
+        <div class="field" id="f-peso">
+          <label>Peso bruto total (kg) *</label>
+          <input type="number" id="peso" placeholder="0" min="0">
+          <span class="err-msg">Campo requerido</span>
+        </div>
+        <div class="field" id="f-bultos">
+          <label>Número de bultos *</label>
+          <input type="number" id="bultos" placeholder="0" min="0">
+          <span class="err-msg">Campo requerido</span>
+        </div>
+        <div class="field span-2" id="f-fecha">
+          <label>Fecha de traslado *</label>
+          <input type="date" id="fechaTraslado">
+          <span class="err-msg">Campo requerido</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSPORTE -->
+    <div class="card">
+      <div class="section-title">Transporte</div>
+      <div class="transport-grid">
+        <div class="t-option active" id="opt-rey" onclick="setTransporte('rey')">
+          <h4>Movilidad de Rey</h4>
+          <p>Datos precargados automáticamente</p>
+        </div>
+        <div class="t-option" id="opt-priv" onclick="setTransporte('privado')">
+          <h4>Movilidad privada</h4>
+          <p>Ingrese los datos del conductor</p>
+        </div>
+      </div>
+      <div id="datos-rey" class="precargado">
+        <span class="badge">DNI: 10438228</span>
+        <span class="badge">Chofer: Wilson Oxza</span>
+        <span class="badge">Placa: CFO811</span>
+        <span class="badge">Licencia: Q10438228</span>
+      </div>
+      <div id="datos-priv" style="display:none;">
+        <div class="grid-2">
+          <div class="field" id="f-dni"><label>DNI del conductor *</label><input type="text" id="dniChofer" placeholder="DNI" maxlength="8"><span class="err-msg">Campo requerido</span></div>
+          <div class="field" id="f-nomch"><label>Nombre del chofer *</label><input type="text" id="nombreChofer" placeholder="Nombre completo"><span class="err-msg">Campo requerido</span></div>
+          <div class="field" id="f-placa"><label>Placa *</label><input type="text" id="placa" placeholder="AAA000" maxlength="7"><span class="err-msg">Campo requerido</span></div>
+          <div class="field" id="f-lic"><label>Licencia *</label><input type="text" id="licencia" placeholder="Número de licencia"><span class="err-msg">Campo requerido</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEMS -->
+    <div class="card">
+      <div class="section-title">Ítems a Transportar</div>
+      <div class="items-header">
+        <label>¿Cuántos ítems?</label>
+        <input type="number" id="numItems" value="1" min="1" max="20" oninput="renderItems()">
+        <span style="font-size:12px;color:var(--muted);">Máximo 20</span>
+      </div>
+      <div id="items-container"></div>
+    </div>
+
+    <!-- OBSERVACIONES -->
+    <div class="card">
+      <div class="section-title">Observaciones</div>
       <div class="field">
-        <label>RUC</label>
-        <input type="text" id="ruc" placeholder="Ej: 20123456789" />
-      </div>
-      <div class="field">
-        <label>Razón / Motivo de la guía</label>
-        <input type="text" id="motivo" placeholder="Ej: Venta, traslado..." />
+        <label>Observaciones (opcional)</label>
+        <textarea id="observaciones" placeholder='Ej: "Producto requiere refrigeración."'></textarea>
       </div>
     </div>
-    <div class="row2">
-      <div class="field">
-        <label>Peso bruto total (kg)</label>
-        <input type="number" id="peso" placeholder="0.00" />
-      </div>
-      <div class="field">
-        <label>Número de bultos</label>
-        <input type="number" id="bultos" placeholder="0" />
-      </div>
-    </div>
-    <div class="field">
-      <label>Fecha de traslado</label>
-      <input type="date" id="fecha-traslado" />
-    </div>
-  </div>
 
-  <!-- TRANSPORTE -->
-  <div class="card">
-    <div class="section-title">Transporte</div>
-    <div class="transport-options">
-      <label class="transport-opt selected" id="opt-rey">
-        <input type="radio" name="transporte" value="rey" checked />
-        <div>
-          <div class="transport-opt-label">Movilidad de Rey</div>
-          <div class="transport-opt-sub">Datos precargados automáticamente</div>
-        </div>
-      </label>
-      <label class="transport-opt" id="opt-privado">
-        <input type="radio" name="transporte" value="privado" />
-        <div>
-          <div class="transport-opt-label">Movilidad privada del destinatario</div>
-          <div class="transport-opt-sub">Ingrese los datos del conductor</div>
-        </div>
-      </label>
-    </div>
-    <div id="rey-info" class="rey-info">
-      <div class="rey-chip">DNI: <span>10438228</span></div>
-      <div class="rey-chip">Chofer: <span>Wilson Oxza</span></div>
-      <div class="rey-chip">Placa: <span>CFO811</span></div>
-      <div class="rey-chip">Licencia: <span>Q10438228</span></div>
-    </div>
-    <div id="driver-fields">
-      <div class="row2">
-        <div class="field">
-          <label>DNI del conductor</label>
-          <input type="text" id="drv-dni" placeholder="Ej: 12345678" />
-        </div>
-        <div class="field">
-          <label>Nombre del chofer</label>
-          <input type="text" id="drv-nombre" placeholder="Nombre completo" />
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label>Placa del vehículo</label>
-          <input type="text" id="drv-placa" placeholder="Ej: ABC123" />
-        </div>
-        <div class="field">
-          <label>Licencia de conducir</label>
-          <input type="text" id="drv-licencia" placeholder="Ej: Q12345678" />
-        </div>
-      </div>
-    </div>
-  </div>
+    <button type="submit" class="btn-submit" id="btnEnviar">Enviar solicitud →</button>
+  </form>
+</div>
 
-  <!-- ITEMS -->
-  <div class="card">
-    <div class="section-title">
-      Ítems a transportar
-      <span class="badge" id="items-count-badge">0 ítems</span>
-    </div>
-    <div class="field">
-      <label>¿Cuántos ítems desea ingresar?</label>
-      <div class="qty-row">
-        <input type="number" id="qty-input" min="1" max="20" placeholder="0" />
-        <span>Máximo 20 ítems</span>
-      </div>
-      <p class="hint">Ingrese la cantidad y los campos aparecerán automáticamente</p>
-    </div>
-    <div id="items-container"></div>
-  </div>
-
-  <!-- OBSERVACION -->
-  <div class="card">
-    <div class="section-title">Observaciones</div>
-    <div class="field">
-      <textarea id="observacion" placeholder="Ej: Mercadería frágil, entregar antes del mediodía, coordinar con almacén..."></textarea>
-      <p class="obs-example">Ejemplo: "Producto requiere refrigeración. Llamar al destinatario antes de llegar."</p>
-    </div>
-  </div>
-
-  <button class="btn-primary" id="btn-submit" onclick="submitForm()">Enviar solicitud</button>
-  <div class="success-msg" id="success-msg">✅ Solicitud enviada correctamente a Power Automate</div>
-  <div class="error-msg" id="error-msg">❌ Error al enviar. Verifique la URL del flujo o intente nuevamente.</div>
-
+<div id="success-screen">
+  <div class="success-icon">✓</div>
+  <h2>¡Solicitud enviada!</h2>
+  <p>Tu guía de remisión fue registrada correctamente en el sistema.</p>
+  <button class="btn-new" onclick="resetForm()">Nueva solicitud</button>
 </div>
 
 <script>
-  // ======================================================
-  // ⚠️  PEGA AQUÍ LA URL DE TU FLUJO DE POWER AUTOMATE
-  // ======================================================
-  const POWER_AUTOMATE_URL = 'https://default5be5e0429c1f4adbb5ab251d950378.eb.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/394df036f7ba4d29ba52d2aae52b710d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=DhjF3Jlb6Z-yYqHGaqtgQr9QmcP7TIxwjOaW9i-cUz0';
-  // ======================================================
+  // ── CONFIGURACIÓN ──────────────────────────────────────────────
+  const SP_SITE = 'https://arxsa331.sharepoint.com/sites/SOLICITUDDEGUIADEREMISIN';
+  const SP_LIST = 'SOLICITUD DE GUIA DE REMISIÓN';
+  const REY = { dni:'10438228', nombre:'Wilson Oxza', placa:'CFO811', licencia:'Q10438228' };
+  const UNIDADES = ['Unidades','Kilogramos','Gramos','Toneladas','Metros','Metros cuadrados','Litros','Cajas','Bolsas','Pallets','Sacos'];
 
-  // Datos fijos de Rey
-  const REY = {
-    dniChofer: '10438228',
-    nombreChofer: 'Wilson Oxza',
-    placa: 'CFO811',
-    licencia: 'Q10438228'
-  };
+  let transporte = 'rey';
 
-  function selectTransport(tipo) {
-    document.getElementById('opt-rey').classList.toggle('selected', tipo === 'rey');
-    document.getElementById('opt-privado').classList.toggle('selected', tipo === 'privado');
-    document.getElementById('rey-info').style.display = tipo === 'rey' ? 'flex' : 'none';
-    document.getElementById('driver-fields').style.display = tipo === 'privado' ? 'block' : 'none';
-    // Sincronizar radio buttons
-    document.querySelector('input[name="transporte"][value="' + tipo + '"]').checked = true;
+  function setTransporte(t) {
+    transporte = t;
+    document.getElementById('opt-rey').classList.toggle('active', t==='rey');
+    document.getElementById('opt-priv').classList.toggle('active', t==='privado');
+    document.getElementById('datos-rey').style.display = t==='rey' ? 'flex' : 'none';
+    document.getElementById('datos-priv').style.display = t==='privado' ? 'block' : 'none';
   }
 
-  // Listeners robustos para compatibilidad con SharePoint
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('input[name="transporte"]').forEach(function(radio) {
-      radio.addEventListener('change', function() { selectTransport(this.value); });
-    });
-    document.getElementById('opt-rey').addEventListener('click', function() { selectTransport('rey'); });
-    document.getElementById('opt-privado').addEventListener('click', function() { selectTransport('privado'); });
-  });
-
-  const qtyInput = document.getElementById('qty-input');
-  const container = document.getElementById('items-container');
-  const badge = document.getElementById('items-count-badge');
-
-  qtyInput.addEventListener('input', function () {
-    const n = Math.min(Math.max(parseInt(this.value) || 0, 0), 20);
-    this.value = n || '';
-    badge.textContent = n + (n === 1 ? ' ítem' : ' ítems');
-    renderItems(n);
-  });
-
-  function renderItems(n) {
-    container.innerHTML = '';
-    if (n === 0) return;
-    const divider = document.createElement('hr');
-    divider.className = 'divider';
-    container.appendChild(divider);
-    for (let i = 1; i <= n; i++) {
-      const div = document.createElement('div');
-      div.className = 'item-card';
-      div.innerHTML = `
-        <div class="item-label"><span class="item-num">${i}</span> Ítem ${i}</div>
-        <div class="field">
-          <label>Descripción</label>
-          <input type="text" class="item-desc" placeholder="Descripción del producto o mercancía" />
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label>Cantidad</label>
-            <input type="text" class="item-qty" placeholder="0" />
-          </div>
-          <div class="field">
-            <label>Unidad de medida</label>
-            <select class="item-unit">
-              <option value="">Seleccionar...</option>
-              <option>Unidades</option>
-              <option>Kilogramos</option>
-              <option>Cajas</option>
-              <option>Bolsas</option>
-              <option>Metros</option>
-              <option>Litros</option>
-            </select>
-          </div>
-        </div>
-      `;
-      container.appendChild(div);
+  function renderItems() {
+    const n = Math.min(Math.max(parseInt(document.getElementById('numItems').value)||1,1),20);
+    const c = document.getElementById('items-container');
+    const cur = c.querySelectorAll('.item-block').length;
+    for(let i=cur+1;i<=n;i++){
+      const d = document.createElement('div');
+      d.className='item-block'; d.id=`ib-${i}`;
+      d.innerHTML=`<div class="item-num-row"><div class="item-num">${i}</div><span>Ítem ${i}</span></div>
+      <div class="grid-2">
+        <div class="field span-2" id="fd-${i}"><label>Descripción *</label><input type="text" id="desc-${i}" placeholder="Descripción del producto"><span class="err-msg">Requerido</span></div>
+        <div class="field" id="fc-${i}"><label>Cantidad *</label><input type="number" id="cant-${i}" placeholder="0" min="0"><span class="err-msg">Requerido</span></div>
+        <div class="field" id="fu-${i}"><label>Unidad *</label><select id="uni-${i}">${UNIDADES.map(u=>`<option>${u}</option>`).join('')}</select></div>
+      </div>`;
+      c.appendChild(d);
     }
+    for(let i=cur;i>n;i--){ document.getElementById(`ib-${i}`)?.remove(); }
   }
 
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('fecha-traslado').value = today;
+  function req(id, fid) {
+    const v = document.getElementById(id)?.value?.trim();
+    const f = document.getElementById(fid);
+    if(!v){ f?.classList.add('error'); return false; }
+    f?.classList.remove('error'); return true;
+  }
 
-  async function submitForm() {
-    // Validaciones básicas
-    const n = parseInt(qtyInput.value) || 0;
-    if (!document.getElementById('razon-social').value.trim()) {
-      alert('Por favor ingrese la razón social del destinatario.');
-      return;
+  function validate() {
+    let ok = true;
+    ok = req('solicitante','f-sol') && ok;
+    ok = req('area','f-area') && ok;
+    ok = req('razonSocial','f-razon') && ok;
+    ok = req('ruc','f-ruc') && ok;
+    ok = req('motivo','f-motivo') && ok;
+    ok = req('peso','f-peso') && ok;
+    ok = req('bultos','f-bultos') && ok;
+    ok = req('fechaTraslado','f-fecha') && ok;
+    if(transporte==='privado'){
+      ok = req('dniChofer','f-dni') && ok;
+      ok = req('nombreChofer','f-nomch') && ok;
+      ok = req('placa','f-placa') && ok;
+      ok = req('licencia','f-lic') && ok;
     }
-    if (!document.getElementById('ruc').value.trim()) {
-      alert('Por favor ingrese el RUC.');
-      return;
+    const n = parseInt(document.getElementById('numItems').value)||1;
+    for(let i=1;i<=n;i++){
+      ok = req(`desc-${i}`,`fd-${i}`) && ok;
+      ok = req(`cant-${i}`,`fc-${i}`) && ok;
     }
-    if (n === 0) {
-      alert('Por favor ingrese la cantidad de ítems.');
-      return;
-    }
+    return ok;
+  }
 
-    // Recopilar ítems
-    const descs = document.querySelectorAll('.item-desc');
-    const qtys = document.querySelectorAll('.item-qty');
-    const units = document.querySelectorAll('.item-unit');
-    const itemsArr = [];
-    for (let i = 0; i < descs.length; i++) {
-      itemsArr.push({
-        descripcion: descs[i].value,
-        cantidad: qtys[i].value,
-        unidad: units[i].value
+  document.getElementById('mainForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    if(!validate()){ document.querySelector('.error')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+
+    const n = parseInt(document.getElementById('numItems').value)||1;
+    const items = [];
+    for(let i=1;i<=n;i++){
+      items.push({
+        descripcion: document.getElementById(`desc-${i}`).value.trim(),
+        cantidad: document.getElementById(`cant-${i}`).value.trim(),
+        unidad: document.getElementById(`uni-${i}`).value
       });
     }
 
-    // Determinar transporte
-    const esRey = document.querySelector('input[name=transporte]:checked').value === 'rey';
-    const dniChofer   = esRey ? REY.dniChofer   : document.getElementById('drv-dni').value;
-    const nombreChofer = esRey ? REY.nombreChofer : document.getElementById('drv-nombre').value;
-    const placa       = esRey ? REY.placa        : document.getElementById('drv-placa').value;
-    const licencia    = esRey ? REY.licencia     : document.getElementById('drv-licencia').value;
-
-    // Armar payload — coincide exactamente con el schema del trigger
-    const payload = {
-      razonSocial:    document.getElementById('razon-social').value.trim(),
-      ruc:            document.getElementById('ruc').value.trim(),
-      motivo:         document.getElementById('motivo').value.trim(),
-      peso:           parseFloat(document.getElementById('peso').value) || 0,
-      bultos:         parseInt(document.getElementById('bultos').value) || 0,
-      fechaTraslado:  document.getElementById('fecha-traslado').value,
-      tipoTransporte: esRey ? 'Rey' : 'Privado',
-      dniChofer,
-      nombreChofer,
-      placa,
-      licencia,
-      items:          JSON.stringify(itemsArr),
-      observaciones:  document.getElementById('observacion').value.trim()
+    const ch = transporte==='rey' ? REY : {
+      dni: document.getElementById('dniChofer').value.trim(),
+      nombre: document.getElementById('nombreChofer').value.trim(),
+      placa: document.getElementById('placa').value.trim(),
+      licencia: document.getElementById('licencia').value.trim()
     };
 
-    // Verificar que la URL esté configurada
-    if (POWER_AUTOMATE_URL === 'TU_URL_AQUI' || !POWER_AUTOMATE_URL) {
-      alert('⚠️ Debes pegar la URL de tu flujo de Power Automate en el código (variable POWER_AUTOMATE_URL).');
-      return;
-    }
+    const body = {
+      '__metadata': { 'type': 'SP.Data.SOLICITUD_x0020_DE_x0020_GUIA_x0020_DE_x0020_REMISI_x00d3_NListItem' },
+      'Raz_x00f3_nsocialdeldestinatario': document.getElementById('razonSocial').value.trim(),
+      'RUC': parseFloat(document.getElementById('ruc').value),
+      'Raz_x00f3_n_x002f_MotivodelaguNx0': document.getElementById('motivo').value.trim(),
+      'Pesobrutototal_x0028_kg_x0029_': parseFloat(document.getElementById('peso').value),
+      'N_x00fa_merodebultos': parseFloat(document.getElementById('bultos').value),
+      'Fechadetraslado': document.getElementById('fechaTraslado').value + 'T00:00:00Z',
+      'TipoTransporte': transporte==='rey' ? 'Rey' : 'Privado',
+      'DniChofer': ch.dni,
+      'NombreChofer': ch.nombre,
+      'Placa': ch.placa,
+      'Licencia': ch.licencia,
+      'Items': JSON.stringify(items),
+      'Observaciones': document.getElementById('observaciones').value.trim(),
+      'SOLICITANTE': document.getElementById('solicitante').value.trim(),
+      '_x00c1_REA': document.getElementById('area').value.trim()
+    };
 
-    // Enviar a Power Automate
-    const btn = document.getElementById('btn-submit');
-    btn.disabled = true;
-    btn.textContent = 'Enviando...';
-    document.getElementById('success-msg').style.display = 'none';
-    document.getElementById('error-msg').style.display = 'none';
+    document.getElementById('overlay').classList.add('on');
+    document.getElementById('btnEnviar').disabled = true;
 
     try {
-      const response = await fetch(POWER_AUTOMATE_URL, {
+      const res = await fetch(`${SP_SITE}/_api/web/lists/getbytitle('${encodeURIComponent(SP_LIST)}')/items`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        headers: {
+          'Accept': 'application/json;odata=verbose',
+          'Content-Type': 'application/json;odata=verbose',
+          'X-RequestDigest': await getDigest()
+        },
+        credentials: 'include',
+        body: JSON.stringify(body)
       });
 
-      if (response.ok || response.status === 202) {
-        document.getElementById('success-msg').style.display = 'block';
-      } else {
-        throw new Error('Status: ' + response.status);
-      }
-    } catch (err) {
-      console.error('Error al enviar:', err);
-      document.getElementById('error-msg').style.display = 'block';
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Enviar solicitud';
+      if(!res.ok) throw new Error(await res.text());
+
+      document.getElementById('overlay').classList.remove('on');
+      document.getElementById('form-wrapper').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      window.scrollTo({top:0,behavior:'smooth'});
+
+    } catch(err) {
+      document.getElementById('overlay').classList.remove('on');
+      document.getElementById('btnEnviar').disabled = false;
+      alert('Error al guardar: ' + err.message);
     }
+  });
+
+  async function getDigest() {
+    const r = await fetch(`${SP_SITE}/_api/contextinfo`, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json;odata=verbose' },
+      credentials: 'include'
+    });
+    const d = await r.json();
+    return d.d.GetContextWebInformation.FormDigestValue;
   }
+
+  function resetForm(){
+    document.getElementById('mainForm').reset();
+    document.getElementById('form-wrapper').style.display='block';
+    document.getElementById('success-screen').style.display='none';
+    document.getElementById('btnEnviar').disabled=false;
+    setTransporte('rey');
+    document.getElementById('numItems').value=1;
+    renderItems();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  renderItems();
 </script>
 </body>
 </html>
