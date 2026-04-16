@@ -327,7 +327,7 @@
   // ── CONFIGURACIÓN EMAILJS ──────────────────────────────────────
   emailjs.init('SEDuc6cmbSV6A4p-q');
   const EMAILJS_SERVICE = 'service_jdnkf7a';
-  const EMAILJS_TEMPLATE = 'template_pn3ij54';
+  const EMAILJS_TEMPLATE = 'ixjb83z';
   const REY = { dni:'10438228', nombre:'Wilson Oxza', placa:'CFO811', licencia:'Q10438228' };
   const UNIDADES = ['Unidades','Kilogramos','Gramos','Toneladas','Metros','Metros cuadrados','Litros','Cajas','Bolsas','Pallets','Sacos'];
 
