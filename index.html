@@ -217,33 +217,33 @@
           <input type="text" id="solicitante" placeholder="Nombre y apellido">
           <span class="err-msg">Campo requerido</span>
         </div>
-    <div class="field" id="f-area">
-  <label>Área / Departamento *</label>
-  <select id="area" required>
-    <option value="">Seleccione un área</option>
-    <option>RECURSOS HUMANOS</option>
-    <option>MANTENIMIENTO</option>
-    <option>PRODUCCIÓN CIERRES METALICOS</option>
-    <option>PRODUCCIÓN CIERRES NO METALICOS</option>
-    <option>PRODUCCIÓN CIERRES TEJIDOS</option>
-    <option>PRODUCCIÓN NO CIERRES</option>
-    <option>PROYECTOS Y MEJORA CONTINUA</option>
-    <option>PLANEAMIENTO</option>
-    <option>SISTEMAS</option>
-    <option>SSOMA</option>
-    <option>TALENTO Y CULTURA</option>
-    <option>BIENESTAR Y SALUD</option>
-    <option>PLANILLAS</option>
-    <option>CONTABILIDAD</option>
-    <option>CONTABILIDAD DE COSTOS</option>
-    <option>CREDITOS Y COBRANZAS</option>
-    <option>TESORERIA</option>
-    <option>COMPRAS</option>
-    <option>LOGISTICA</option>
-    <option>COMERCIAL</option>
-  </select>
-  <span class="err-msg">Campo requerido</span>
-</div>
+        <div class="field" id="f-area">
+          <label>Área / Departamento *</label>
+          <select id="area" required>
+            <option value="">Seleccione un área</option>
+            <option>RECURSOS HUMANOS</option>
+            <option>MANTENIMIENTO</option>
+            <option>PRODUCCIÓN CIERRES METALICOS</option>
+            <option>PRODUCCIÓN CIERRES NO METALICOS</option>
+            <option>PRODUCCIÓN CIERRES TEJIDOS</option>
+            <option>PRODUCCIÓN NO CIERRES</option>
+            <option>PROYECTOS Y MEJORA CONTINUA</option>
+            <option>PLANEAMIENTO</option>
+            <option>SISTEMAS</option>
+            <option>SSOMA</option>
+            <option>TALENTO Y CULTURA</option>
+            <option>BIENESTAR Y SALUD</option>
+            <option>PLANILLAS</option>
+            <option>CONTABILIDAD</option>
+            <option>CONTABILIDAD DE COSTOS</option>
+            <option>CREDITOS Y COBRANZAS</option>
+            <option>TESORERIA</option>
+            <option>COMPRAS</option>
+            <option>LOGISTICA</option>
+            <option>COMERCIAL</option>
+          </select>
+          <span class="err-msg">Campo requerido</span>
+        </div>
       </div>
     </div>
 
@@ -425,9 +425,9 @@
         unidad: document.getElementById(`uni-${i}`).value
       });
     }
-    // Build individual item params for SharePoint
+    // Build individual item params for SharePoint - AHORA SOPORTA HASTA 20 ITEMS
     const itemParams = {};
-    for(let i=1;i<=10;i++){
+    for(let i=1;i<=20;i++){
       itemParams[`Item_${i}`] = i <= items.length ? items[i-1].descripcion : '';
       itemParams[`CANTIDAD_${i}`] = i <= items.length ? items[i-1].cantidad : '';
       itemParams[`UNIDAD_${i}`] = i <= items.length ? items[i-1].unidad : '';
